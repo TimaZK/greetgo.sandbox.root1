@@ -7,7 +7,7 @@
 </mat-form-field>
 
 <div class="container">
-<table mat-table [dataSource]="listService.loadRecords()" matSort class="mat-elevation-z8" (matSortChange)="myFunk1($event)">
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" (matSortChange)="myFunk1($event)">
 
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> id </th>

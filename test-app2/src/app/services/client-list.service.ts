@@ -1,16 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpService} from "../http.service";
-import {ClientDisplay} from "../../model/ClientDisplay";
-import {ClientToSave} from "../../model/ClientToSave";
-import {Gender} from "../../model/Gender";
-import {MatTableDataSource} from "@angular/material/table";
+import {ClientDisplay} from "../model/ClientDisplay";
+import {ClientToSave} from "../model/ClientToSave";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientListService {
   constructor(
-    private http: HttpService
   ) {
   }
 

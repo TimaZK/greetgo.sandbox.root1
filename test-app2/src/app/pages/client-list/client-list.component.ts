@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
-import {LoginService} from "../login/login.service";
-import {ClientListService} from "../services/client-list.service";
+import {ClientListService} from "../../services/client-list.service";
 import {AddCustomerComponent} from "../add-customer/add-customer.component";
-import {MatDialog} from "@angular/material/dialog";
-import {ClientToSave} from "../../model/ClientToSave";
+import { MatDialog } from '@angular/material/dialog';
+import { ClientDisplay } from 'src/app/model/ClientDisplay';
 
 @Component({
   selector: 'app-client-list',
@@ -16,14 +15,14 @@ import {ClientToSave} from "../../model/ClientToSave";
 
 export class ClientListComponent implements OnInit {
   constructor(
-    public login: LoginService,
     public listService: ClientListService,
     public dialog: MatDialog,
+    private changeDetectorRefs: ChangeDetectorRef
   ) {
   }
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
   filterName: string;
   displayedColumns: string[] = ['id', 'fio', 'age', 'character', 'totalBalanceOfAccounts', 'maximumBalance', 'minimumBalance', 'action'];
 
@@ -31,6 +30,7 @@ export class ClientListComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.data = this.listService.loadRecords();
   }
 
   myFunk($event: PageEvent) {
@@ -50,10 +50,18 @@ export class ClientListComponent implements OnInit {
       width: '700px',
       height: '700px',
     });
+
+    dialogRef.afterClosed().subscribe(
+      (res: ClientDisplay) => {
+        console.log(res);
+        this.dataSource.data.unshift(res);
+        this.changeDetectorRefs.detectChanges();
+      }
+    );
   }
 
   openDialog(action, obj) {
-    console.log(this.dataSource.data);
+    this.openModal();
   }
 }
 

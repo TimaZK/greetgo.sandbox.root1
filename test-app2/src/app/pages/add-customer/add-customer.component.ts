@@ -4,10 +4,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {Gender} from "../../model/Gender";
 import {ClientToSave} from "../../model/ClientToSave";
 import {Charm} from "../../model/Charm";
-import {Address} from "../../model/Address";
-import {Phones} from "../../model/Phones";
 import {PhoneType} from "../../model/PhoneType";
-import {ClientListService} from "../services/client-list.service";
+import {ClientListService} from "../../services/client-list.service";
 import {ClientDisplay} from "../../model/ClientDisplay";
 
 @Component({
@@ -27,6 +25,8 @@ export class AddCustomerComponent implements OnInit {
     {id: 2, name: "Rude"},
     {id: 3, name: "Caring"}
   ];
+
+  public newClientDisplay = new ClientDisplay();
 
   constructor(
     private fb: FormBuilder,
@@ -93,25 +93,19 @@ export class AddCustomerComponent implements OnInit {
 
     this.listService.clientArr = this.clientArr;
 
-    let clientDisplay = new ClientDisplay();
+    this.newClientDisplay = new ClientDisplay();
 
     for (let i=0; i<this.listService.clientArr.length; i++) {
       if(this.listService.clientArr[i].id == null) {
-        clientDisplay.id = this.listService.loadRecords().length + 1;
-        clientDisplay.fio = '';
-        clientDisplay.age = 0;
-        clientDisplay.character = '';
-        clientDisplay.totalBalanceOfAccounts = 0;
-        clientDisplay.maximumBalance = 0;
-        clientDisplay.minimumBalance = 0;
+        this.newClientDisplay.id = this.listService.loadRecords().length + 1;
+        this.newClientDisplay.fio = this.listService.clientArr[i].firstName + this.listService.clientArr[i].firstName;
+        this.newClientDisplay.age = 0;
+        this.newClientDisplay.character = '';
+        this.newClientDisplay.totalBalanceOfAccounts = 0;
+        this.newClientDisplay.maximumBalance = 0;
+        this.newClientDisplay.minimumBalance = 0;
       }
     }
-    this.listService.loadRecords().unshift(clientDisplay);
-    console.log(this.listService.loadRecords());
-  }
-
-  close() {
-    this.dialog.closeAll();
   }
 
   get firstName() {
@@ -130,9 +124,3 @@ export class AddCustomerComponent implements OnInit {
     return this.myFirstReactiveForm.get('date');
   }
 }
-
-
-
-//for (let i=0; i<this.listService.clientArr.length; i++) {
-//       this.clientDisplayArr.push()
-//     }
