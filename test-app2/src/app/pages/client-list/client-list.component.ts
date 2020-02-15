@@ -55,7 +55,7 @@ export class ClientListComponent implements OnInit {
       (res: ClientDisplay) => {
         console.log(res);
         this.dataSource.data.unshift(res);
-        this.changeDetectorRefs.detectChanges();
+        this.dataSource.data = [...this.dataSource.data];
       }
     );
   }
