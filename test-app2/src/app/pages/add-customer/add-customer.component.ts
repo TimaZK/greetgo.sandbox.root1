@@ -37,34 +37,60 @@ export class AddCustomerComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
-    console.log(this.data);
   }
 
   initForm() {
-    this.myFirstReactiveForm = this.fb.group({
-      firstName: ([this.data.firstName, Validators.required]),
-      lastName: ([this.data.lastName, Validators.required]),
-      patronymic: (['', Validators.required]),
-      gender: this.fb.control([Gender.MALE, Validators.required]),
-      date: this.fb.control(['', Validators.required]),
-      charm: this.fb.control(['', Validators.required]),
-      factAddress: this.fb.group({
-        street: (['']),
-        house: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/)),
-        flat: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/))
-      }),
-      regAddress: this.fb.group({
-        street: this.fb.control([''], Validators.required),
-        house: this.fb.control([''], [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-        flat: this.fb.control([''], [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
-      }),
-      phones: this.fb.array([
-        this.fb.group({
-          number: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/)),
-          type: this.fb.control([PhoneType.MOBILE], Validators.required),
-        })
-      ])
-    });
+    if (this.data == null) {
+      this.myFirstReactiveForm = this.fb.group({
+        firstName: (['', Validators.required]),
+        lastName: (['', Validators.required]),
+        patronymic: (['', Validators.required]),
+        gender: this.fb.control([Gender.MALE, Validators.required]),
+        date: this.fb.control(['', Validators.required]),
+        charm: this.fb.control(['', Validators.required]),
+        factAddress: this.fb.group({
+          street: (['']),
+          house: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/)),
+          flat: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/))
+        }),
+        regAddress: this.fb.group({
+          street: this.fb.control([''], Validators.required),
+          house: this.fb.control([''], [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+          flat: this.fb.control([''], [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+        }),
+        phones: this.fb.array([
+          this.fb.group({
+            number: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/)),
+            type: this.fb.control([PhoneType.MOBILE], Validators.required),
+          })
+        ])
+      });
+    } else {
+      this.myFirstReactiveForm = this.fb.group({
+        firstName: ([this.data.firstName, Validators.required]),
+        lastName: ([this.data.lastName, Validators.required]),
+        patronymic: ([this.data.patron, Validators.required]),
+        gender: this.fb.control([Gender.MALE, Validators.required]),
+        date: this.fb.control(['', Validators.required]),
+        charm: this.fb.control(['', Validators.required]),
+        factAddress: this.fb.group({
+          street: (['']),
+          house: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/)),
+          flat: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/))
+        }),
+        regAddress: this.fb.group({
+          street: this.fb.control([''], Validators.required),
+          house: this.fb.control([''], [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+          flat: this.fb.control([''], [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]),
+        }),
+        phones: this.fb.array([
+          this.fb.group({
+            number: this.fb.control([''], Validators.pattern(/^-?(0|[1-9]\d*)?$/)),
+            type: this.fb.control([PhoneType.MOBILE], Validators.required),
+          })
+        ])
+      });
+    }
   }
 
   addPhoneField() {
@@ -97,7 +123,7 @@ export class AddCustomerComponent implements OnInit {
     for (let i=0; i<this.listService.clientArr.length; i++) {
       if(this.listService.clientArr[i].id == null) {
         this.newClientDisplay.id = this.listService.loadRecords().length + 1;
-        this.newClientDisplay.fio = this.listService.clientArr[i].firstName + this.listService.clientArr[i].firstName;
+        this.newClientDisplay.fio = this.listService.clientArr[i].firstName + " " + this.listService.clientArr[i].lastName;
         this.newClientDisplay.age = 0;
         this.newClientDisplay.character = '';
         this.newClientDisplay.totalBalanceOfAccounts = 0;

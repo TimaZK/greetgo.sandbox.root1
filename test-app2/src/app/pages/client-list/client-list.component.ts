@@ -6,6 +6,7 @@ import {ClientListService} from "../../services/client-list.service";
 import {AddCustomerComponent} from "../add-customer/add-customer.component";
 import { MatDialog } from '@angular/material/dialog';
 import { ClientDisplay } from 'src/app/model/ClientDisplay';
+import {ClientToSave} from "../../model/ClientToSave";
 
 @Component({
   selector: 'app-client-list',
@@ -17,7 +18,6 @@ export class ClientListComponent implements OnInit {
   constructor(
     public listService: ClientListService,
     public dialog: MatDialog,
-    private changeDetectorRefs: ChangeDetectorRef
   ) {
   }
 
@@ -45,23 +45,22 @@ export class ClientListComponent implements OnInit {
     console.log($event);
   }
 
-  openModal(clientDisplay): void {
+  openModal(element): void {
     const dialogRef = this.dialog.open(AddCustomerComponent, {
       width: '700px',
       height: '700px',
-      data: clientDisplay,
+      data: element
     });
-    if (clientDisplay) {
-      return;
-    }
 
     dialogRef.afterClosed().subscribe(
-      (res: ClientDisplay) => {
-        console.log(res);
-        this.dataSource.data.unshift(res);
-        this.dataSource.data = [...this.dataSource.data];
-      }
-    );
+      (res:ClientDisplay) => {
+        if (res.fio!=null) {
+            this.dataSource.data.unshift(res);
+            this.dataSource.data = [...this.dataSource.data];
+        } else {
+          return;
+        }
+      })
   }
 
   openDialogDelete(element: any) {
