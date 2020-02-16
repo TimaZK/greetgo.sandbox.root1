@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {MatDialog} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
 import {Gender} from "../../model/Gender";
 import {ClientToSave} from "../../model/ClientToSave";
 import {Charm} from "../../model/Charm";
@@ -19,7 +19,6 @@ export class AddCustomerComponent implements OnInit {
   myFirstReactiveForm: FormGroup;
 
   clientArr: ClientToSave[] = [];
-  // clientDisplayArr: ClientDisplay[] = [];
   charms: Charm[] = [
     {id: 1, name: "Kind"},
     {id: 2, name: "Rude"},
@@ -32,19 +31,19 @@ export class AddCustomerComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     public listService: ClientListService,
+    @Inject (MAT_DIALOG_DATA) public data: ClientToSave
   ) {
   }
 
   ngOnInit() {
     this.initForm();
-    // this.clientDisplayArr = this.listService.loadRecords();
+    console.log(this.data);
   }
 
   initForm() {
     this.myFirstReactiveForm = this.fb.group({
-      // id: ([234532]),
-      firstName: (['', Validators.required]),
-      lastName: (['', Validators.required]),
+      firstName: ([this.data.firstName, Validators.required]),
+      lastName: ([this.data.lastName, Validators.required]),
       patronymic: (['', Validators.required]),
       gender: this.fb.control([Gender.MALE, Validators.required]),
       date: this.fb.control(['', Validators.required]),

@@ -12,7 +12,10 @@ export class ClientListService {
 
   loadRecords(): ClientDisplay[] {
     return  <ClientDisplay[]>[
-      {id: 1, fio: 'Tima', age: 20, character: 'good', totalBalanceOfAccounts: 2000, maximumBalance: 1500, minimumBalance: 500},
+      {id: 1, fio: 'Tima Zarlykov', age: 20, character: 'good', totalBalanceOfAccounts: 2000, maximumBalance: 1500, minimumBalance: 500,
+      clientToSave: {
+        firstName: "Tima", lastName: "Zarlykov"
+      }},
       {id: 2, fio: 'Bimadsba', age: 20, character: 'good', totalBalanceOfAccounts: 2000, maximumBalance: 1500, minimumBalance: 500},
       {id: 3, fio: 'Zimadsfaa', age: 20, character: 'good', totalBalanceOfAccounts: 2000, maximumBalance: 1500, minimumBalance: 500},
       {id: 4, fio: 'Himasdfasa', age: 20, character: 'good', totalBalanceOfAccounts: 2000, maximumBalance: 1500, minimumBalance: 500},

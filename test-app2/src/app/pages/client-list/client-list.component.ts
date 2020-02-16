@@ -45,11 +45,15 @@ export class ClientListComponent implements OnInit {
     console.log($event);
   }
 
-  openModal(): void {
+  openModal(clientDisplay): void {
     const dialogRef = this.dialog.open(AddCustomerComponent, {
       width: '700px',
       height: '700px',
+      data: clientDisplay,
     });
+    if (clientDisplay) {
+      return;
+    }
 
     dialogRef.afterClosed().subscribe(
       (res: ClientDisplay) => {
@@ -60,15 +64,11 @@ export class ClientListComponent implements OnInit {
     );
   }
 
-  openDialog(action, obj) {
-    this.openModal();
+  openDialogDelete(element: any) {
+    this.dataSource.data = this.dataSource.data.filter((value:any) => value.id!=element.id);
+  }
+
+  openDialogUpdate(element: ClientDisplay) {
+    this.openModal(element.clientToSave);
   }
 }
-
-// openDialog(action,obj) {
-//   obj.action = action;
-//   const dialogRef = this.dialog.open(AddCustomerComponent, {
-//     width: '700px',
-//     height: '700px'
-//   });
-// }

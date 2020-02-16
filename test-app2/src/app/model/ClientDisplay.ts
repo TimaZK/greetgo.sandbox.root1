@@ -8,6 +8,7 @@ export class ClientDisplay {
   public totalBalanceOfAccounts: number;
   public maximumBalance: number;
   public minimumBalance: number;
+  public clientToSave: ClientToSave;
 
   public static create(a: any): ClientDisplay {
     const ret = new ClientDisplay();
