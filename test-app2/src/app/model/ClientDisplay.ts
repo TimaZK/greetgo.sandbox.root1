@@ -6,5 +6,4 @@ export class ClientDisplay {
   public totalBalanceOfAccounts: number;
   public maximumBalance: number;
   public minimumBalance: number;
-
 }
