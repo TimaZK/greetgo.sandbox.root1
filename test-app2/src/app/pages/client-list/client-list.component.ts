@@ -6,6 +6,7 @@ import {ClientListService} from "../../services/client-list.service";
 import {AddCustomerComponent} from "../add-customer/add-customer.component";
 import { MatDialog } from '@angular/material/dialog';
 import { ClientDisplay } from 'src/app/model/ClientDisplay';
+import { Charm } from 'src/app/model/Charm';
 
 @Component({
   selector: 'app-client-list',
@@ -17,9 +18,13 @@ export class ClientListComponent implements OnInit {
   constructor(
     public listService: ClientListService,
     public dialog: MatDialog,
-    private changeDetectorRefs: ChangeDetectorRef
   ) {
   }
+  charms: Charm[] = [
+    {id: 1, name: "Kind"},
+    {id: 2, name: "Rude"},
+    {id: 3, name: "Caring"}
+  ];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -27,6 +32,7 @@ export class ClientListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'fio', 'age', 'character', 'totalBalanceOfAccounts', 'maximumBalance', 'minimumBalance', 'action'];
 
   dataSource = new MatTableDataSource();
+  private newClientDisplay: ClientDisplay;
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
@@ -45,30 +51,65 @@ export class ClientListComponent implements OnInit {
     console.log($event);
   }
 
-  openModal(): void {
+  openModal(id): void {
     const dialogRef = this.dialog.open(AddCustomerComponent, {
       width: '700px',
       height: '700px',
+      data: id
     });
 
     dialogRef.afterClosed().subscribe(
-      (res: ClientDisplay) => {
-        console.log(res);
-        this.dataSource.data.unshift(res);
-        this.dataSource.data = [...this.dataSource.data];
+      res=> {
+        if (res == null) {
+          return;
+        }
+        if (res.id > this.listService.clientArr.length) {
+          this.newClientDisplay = new ClientDisplay();
+          this.newClientDisplay.id = res.id;
+          this.newClientDisplay.fio = res.firstName + " " + res.lastName;
+          if (res.charm == 1) {
+            this.newClientDisplay.character = this.charms[0].name;
+          } else if (res.charm == 2) {
+            this.newClientDisplay.character = this.charms[1].name;
+          } else {
+            this.newClientDisplay.character = this.charms[2].name;
+          }
+          this.newClientDisplay.totalBalanceOfAccounts = 0;
+          this.newClientDisplay.maximumBalance = 0;
+          this.newClientDisplay.minimumBalance = 0;
+
+          this.dataSource.data.unshift(this.newClientDisplay);
+          this.listService.clientArr.push(res);
+          this.dataSource.data = [...this.dataSource.data];
+          console.log(this.listService.clientArr);
+          console.log(this.listService.loadRecords());
+
+        } else {
+          for (let i=0; i<this.listService.clientArr.length; i++) {
+            if (this.listService.clientArr[i].id === res.id) {
+              this.listService.clientArr[i].firstName = res.firstName;
+              this.listService.clientArr[i].lastName = res.lastName;
+              this.listService.clientArr[i].patron = res.patron;
+              this.listService.clientArr[i].birthDay = res.birthDay;
+              this.listService.clientArr[i].charm = res.charm;
+              this.listService.clientArr[i].gender = res.gender;
+              this.listService.clientArr[i].factAddress = res.factAddress;
+              this.listService.clientArr[i].regAddress = res.regAddress;
+              this.listService.clientArr[i].phones = res.phones;
+            }
+          }
+        }
       }
-    );
+    )
   }
 
-  openDialog(action, obj) {
-    this.openModal();
+  openDialogDelete(id) {
+    this.dataSource.data = this.dataSource.data.filter((value:any) => value.id!=id);
+    // this.listService.clientArr = this.listService.clientArr.filter((value:any) => value.id!=id);
+    // this.listService.clientArr = this.listService.clientArr.filter((value:any) => value.id!=id);
+  }
+
+  openDialogUpdate(id: ClientDisplay) {
+    this.openModal(id);
   }
 }
-
-// openDialog(action,obj) {
-//   obj.action = action;
-//   const dialogRef = this.dialog.open(AddCustomerComponent, {
-//     width: '700px',
-//     height: '700px'
-//   });
-// }
