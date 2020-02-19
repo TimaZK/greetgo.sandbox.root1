@@ -1,12 +1,11 @@
-import {Component, OnInit, ViewChild, ChangeDetectorRef} from '@angular/core';
+import {ClientDisplay} from "../../model/ClientDisplay";
+import {AddCustomerComponent} from "../add-customer/add-customer.component";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {MatSort} from "@angular/material/sort";
+import {MatDialog} from "@angular/material/dialog";
 import {ClientListService} from "../../services/client-list.service";
-import {AddCustomerComponent} from "../add-customer/add-customer.component";
-import { MatDialog } from '@angular/material/dialog';
-import { ClientDisplay } from 'src/app/model/ClientDisplay';
-import { Charm } from 'src/app/model/Charm';
 
 @Component({
   selector: 'app-client-list',
@@ -20,11 +19,6 @@ export class ClientListComponent implements OnInit {
     public dialog: MatDialog,
   ) {
   }
-  charms: Charm[] = [
-    {id: 1, name: "Kind"},
-    {id: 2, name: "Rude"},
-    {id: 3, name: "Caring"}
-  ];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -67,12 +61,13 @@ export class ClientListComponent implements OnInit {
           this.newClientDisplay = new ClientDisplay();
           this.newClientDisplay.id = res.id;
           this.newClientDisplay.fio = res.firstName + " " + res.lastName;
+          this.newClientDisplay.age = 0;
           if (res.charm == 1) {
-            this.newClientDisplay.character = this.charms[0].name;
+            this.newClientDisplay.character = this.listService.charms[0].name;
           } else if (res.charm == 2) {
-            this.newClientDisplay.character = this.charms[1].name;
+            this.newClientDisplay.character = this.listService.charms[1].name;
           } else {
-            this.newClientDisplay.character = this.charms[2].name;
+            this.newClientDisplay.character = this.listService.charms[2].name;
           }
           this.newClientDisplay.totalBalanceOfAccounts = 0;
           this.newClientDisplay.maximumBalance = 0;
@@ -105,8 +100,6 @@ export class ClientListComponent implements OnInit {
 
   openDialogDelete(id) {
     this.dataSource.data = this.dataSource.data.filter((value:any) => value.id!=id);
-    // this.listService.clientArr = this.listService.clientArr.filter((value:any) => value.id!=id);
-    // this.listService.clientArr = this.listService.clientArr.filter((value:any) => value.id!=id);
   }
 
   openDialogUpdate(id: ClientDisplay) {
